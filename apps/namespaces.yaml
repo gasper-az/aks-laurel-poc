@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: poc-l4
+  labels:
+    purpose: azure-load-balancer
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: poc-l7
+  labels:
+    purpose: application-gateway-for-containers
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: poc-scale
+  labels:
+    purpose: karpenter-nap

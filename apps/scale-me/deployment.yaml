@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scale-me
+  namespace: poc-scale
+  labels:
+    app: scale-me
+    owner: laurel-poc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scale-me
+  template:
+    metadata:
+      labels:
+        app: scale-me
+        owner: laurel-poc
+    spec:
+      containers:
+        - name: pause
+          image: registry.k8s.io/pause:3.9
+          resources:
+            requests:
+              cpu: "1"
+              memory: 1Gi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534

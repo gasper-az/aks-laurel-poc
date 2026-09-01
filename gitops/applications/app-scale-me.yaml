@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-scale-me
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: laurel-poc
+  source:
+    repoURL: https://github.com/gasper-az/aks-laurel-poc.git
+    targetRevision: HEAD
+    path: apps/scale-me
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: poc-scale
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
