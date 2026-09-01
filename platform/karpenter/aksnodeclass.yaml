@@ -1,0 +1,8 @@
+apiVersion: karpenter.azure.com/v1beta1
+kind: AKSNodeClass
+metadata:
+  name: laurel-default
+spec:
+  imageFamily: AzureLinux
+  osDiskSizeGB: 128
+  maxPods: 110

@@ -1,0 +1,26 @@
+apiVersion: karpenter.sh/v1
+kind: NodePool
+metadata:
+  name: workload-spot
+spec:
+  weight: 20
+  limits:
+    cpu: "16"
+  disruption:
+    consolidationPolicy: WhenEmptyOrUnderutilized
+  template:
+    spec:
+      nodeClassRef:
+        group: karpenter.azure.com
+        kind: AKSNodeClass
+        name: laurel-default
+      requirements:
+        - key: karpenter.sh/capacity-type
+          operator: In
+          values: ["spot"]
+        - key: karpenter.azure.com/sku-family
+          operator: In
+          values: ["D"]
+        - key: kubernetes.io/os
+          operator: In
+          values: ["linux"]
