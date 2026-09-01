@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: laurel-poc-root
+  namespace: argocd
+spec:
+  project: laurel-poc
+  source:
+    repoURL: https://github.com/gasper-az/aks-laurel-poc.git
+    targetRevision: HEAD
+    path: gitops/applications
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
