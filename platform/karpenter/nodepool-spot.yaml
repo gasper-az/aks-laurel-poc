@@ -8,6 +8,7 @@ spec:
     cpu: "16"
   disruption:
     consolidationPolicy: WhenEmptyOrUnderutilized
+    consolidateAfter: "1m"
   template:
     spec:
       nodeClassRef:
