@@ -1,0 +1,49 @@
+global:
+  domain: argocd.local
+  nodeSelector:
+    pool: system
+  tolerations:
+    - key: CriticalAddonsOnly
+      operator: Exists
+
+crds:
+  install: true
+  keep: false
+
+dex:
+  enabled: false
+
+notifications:
+  enabled: false
+
+applicationSet:
+  replicas: 1
+
+controller:
+  replicas: 1
+  metrics:
+    enabled: true
+
+server:
+  replicas: 1
+  extraArgs:
+    - --insecure
+  service:
+    type: ClusterIP
+
+repoServer:
+  replicas: 1
+
+redis-ha:
+  enabled: false
+
+redis:
+  enabled: true
+
+configs:
+  params:
+    server.insecure: true
+    application.namespaces: argocd
+  cm:
+    timeout.reconciliation: 60s
+    application.instanceLabelKey: argocd.argoproj.io/instance
