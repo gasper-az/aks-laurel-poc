@@ -5,4 +5,4 @@ metadata:
   namespace: alb-test-infra
 spec:
   associations:
-    - /subscriptions/a7c38d21-c587-4bd0-9913-67218cfdc5bf/resourceGroups/rg-gasper-laurel-poc/providers/Microsoft.Network/virtualNetworks/vnet-laurel-poc/subnets/snet-agfc
+    - /subscriptions/a7c38d21-c587-4bd0-9913-67218cfdc5bf/resourceGroups/rg-gasper-laurel-poc/providers/Microsoft.Network/virtualNetworks/vnet-gasper-laurel-poc/subnets/snet-agfc
