@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-agfc
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: laurel-poc
+  source:
+    repoURL: https://github.com/gasper-az/aks-laurel-poc.git
+    targetRevision: HEAD
+    path: platform/agfc
+    directory:
+      exclude: "{controller/**,README.md}"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: alb-test-infra
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

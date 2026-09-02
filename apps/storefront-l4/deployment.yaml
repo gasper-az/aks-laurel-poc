@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: storefront-l4
+  namespace: poc-l4
+  labels:
+    app: storefront-l4
+    owner: laurel-poc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: storefront-l4
+  template:
+    metadata:
+      labels:
+        app: storefront-l4
+        owner: laurel-poc
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: storefront-l4
+      containers:
+        - name: echo
+          image: hashicorp/http-echo:1.0.0
+          args: ["-listen=:8080", "-text=laurel-poc L4 via Azure Load Balancer"]
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 3
+            periodSeconds: 10

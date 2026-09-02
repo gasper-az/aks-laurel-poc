@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: storefront-l4
+  namespace: poc-l4
+  labels:
+    app: storefront-l4
+    owner: laurel-poc
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /
+    service.beta.kubernetes.io/azure-load-balancer-tcp-idle-timeout: "4"
+spec:
+  type: LoadBalancer
+  selector:
+    app: storefront-l4
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+      protocol: TCP

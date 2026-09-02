@@ -1,0 +1,12 @@
+albController:
+  namespace: azure-alb-system
+  podIdentity:
+    clientID: "dda761b7-b7e9-404b-abfb-8670d5c55aac"
+  controller:
+    replicaCount: 2
+    nodeSelector:
+      pool: system
+    tolerations:
+      - key: CriticalAddonsOnly
+        operator: Exists
+  installGatewayApiCRDs: true

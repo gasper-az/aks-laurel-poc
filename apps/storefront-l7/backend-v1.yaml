@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-v1
+  namespace: poc-l7
+  labels:
+    app: backend-v1
+    owner: laurel-poc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-v1
+  template:
+    metadata:
+      labels:
+        app: backend-v1
+        owner: laurel-poc
+    spec:
+      containers:
+        - name: echo
+          image: hashicorp/http-echo:1.0.0
+          args: ["-listen=:8080", "-text=backend-v1 via Application Gateway for Containers"]
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            privileged: false
+            readOnlyRootFilesystem: true
+            runAsNonRoot: true
+            runAsUser: 65534
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-v1
+  namespace: poc-l7
+  labels:
+    app: backend-v1
+    owner: laurel-poc
+spec:
+  selector:
+    app: backend-v1
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
