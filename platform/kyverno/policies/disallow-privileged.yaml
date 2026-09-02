@@ -1,0 +1,26 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: disallow-privileged
+  annotations:
+    policies.kyverno.io/title: Disallow Privileged
+    policies.kyverno.io/severity: high
+spec:
+  validationFailureAction: Enforce
+  background: true
+  rules:
+    - name: privileged-containers
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+              namespaces: ["poc-l4", "poc-l7", "poc-scale"]
+      validate:
+        message: Privileged containers are not allowed in POC application namespaces.
+        pattern:
+          spec:
+            =(securityContext):
+              =(privileged): false
+            containers:
+              - =(securityContext):
+                  =(privileged): false

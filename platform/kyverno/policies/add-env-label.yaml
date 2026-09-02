@@ -1,0 +1,17 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: add-env-label
+spec:
+  rules:
+    - name: add-env-poc
+      match:
+        any:
+          - resources:
+              kinds: ["Pod"]
+              namespaces: ["poc-l4", "poc-l7", "poc-scale"]
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              +(env): poc
