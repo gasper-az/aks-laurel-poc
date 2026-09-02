@@ -23,12 +23,6 @@ az role assignment create --assignee-object-id $ALB_PRINCIPAL --assignee-princip
 az role assignment create --assignee-object-id $ALB_PRINCIPAL --assignee-principal-type ServicePrincipal \
   --scope $AGFC_SUBNET_ID --role "Network Contributor"
 
-az role assignment create \
-  --assignee-object-id a95ba583-3c80-4ada-97ad-9ea6d18773d6 \
-  --assignee-principal-type ServicePrincipal \
-  --role "Network Contributor" \
-  --scope "/subscriptions/a7c38d21-c587-4bd0-9913-67218cfdc5bf/resourceGroups/rg-gasper-laurel-poc/providers/Microsoft.Network/virtualNetworks/vnet-laurel-poc/subnets/snet-agfc"
-
 # Federated Identity
 az identity federated-credential create \
   --name $ALB_IDENTITY_NAME \
