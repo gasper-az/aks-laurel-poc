@@ -1,7 +1,7 @@
 albController:
   namespace: azure-alb-system
   podIdentity:
-    clientID: "dda761b7-b7e9-404b-abfb-8670d5c55aac"
+    clientID: "c4aef77d-fb5a-4b8b-9eb5-a728fa5a7d34"
   controller:
     replicaCount: 2
     nodeSelector:
