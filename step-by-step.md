@@ -17,6 +17,7 @@ export CLUSTER_NAME="aks-gasper-laurel-poc"
 export VNET_NAME="vnet-gasper-laurel-poc"
 export IDENTITY_NAME="id-aks-laurel-poc"
 export K8S_VERSION="$(az aks get-versions --location $LOCATION --query 'values[0].version' -o tsv)"
+export ARGOCD_CHART_VERSION="10.4.3"
 ```
 
 ---
@@ -156,21 +157,43 @@ Expected: two system nodes Ready, tainted `CriticalAddonsOnly`, labeled `pool=sy
 
 ## 4. Argo CD (Helm)
 
+Pin the chart in Git with `helm pull` (chart vendoring), then install from the local `.tgz`. Values live in `bootstrap/argocd/values.yaml` — Argo CD schedules on the tainted system pool from step 3 (`pool=system`, `CriticalAddonsOnly`).
+
+### 4.1 Vendor the chart
+
+Run once, or again when upgrading `$ARGOCD_CHART_VERSION`. Commit the resulting `.tgz` to Git.
+
 ```bash
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
 
-helm upgrade --install argocd argo/argo-cd \
+helm pull argo/argo-cd \
+  --version "$ARGOCD_CHART_VERSION" \
+  --destination bootstrap/argocd
+```
+
+Expected artifact: `bootstrap/argocd/argo-cd-10.4.3.tgz`.
+
+### 4.2 Install from vendored chart
+
+```bash
+helm upgrade --install argocd \
+  "bootstrap/argocd/argo-cd-${ARGOCD_CHART_VERSION}.tgz" \
   --namespace argocd \
   --create-namespace \
-  --version 7.8.23 \
   --values bootstrap/argocd/values.yaml \
   --wait \
   --timeout 10m
+```
 
+### 4.3 Verify
+
+```bash
 kubectl get pods -n argocd
 kubectl get crd | grep argoproj.io
 ```
+
+Expected: all pods Running (`argocd-server`, `argocd-repo-server`, `argocd-application-controller`, `argocd-applicationset-controller`, `argocd-redis`). CRDs include `applications.argoproj.io`, `appprojects.argoproj.io`.
 
 Optional UI (do not expose Argo CD on a public LoadBalancer):
 
